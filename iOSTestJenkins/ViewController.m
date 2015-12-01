@@ -7,6 +7,7 @@
 //
 
 #import "ViewController.h"
+#import <MBProgressHUD/MBProgressHUD.h>
 
 @interface ViewController ()
 
@@ -22,6 +23,14 @@
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+}
+
+- (IBAction)onBtnAction:(id)sender {
+    
+    MBProgressHUD *hub = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    hub.labelText = @"loading test";
+    
+    [hub hide:YES afterDelay:2];
 }
 
 @end
