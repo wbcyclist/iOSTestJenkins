@@ -4,13 +4,10 @@
 # GITREVSHA=$(git --git-dir="${PROJECT_DIR}/.git" --work-tree="${PROJECT_DIR}" rev-parse --short HEAD)
 GITREVSHA=$(git rev-parse --short HEAD)
 GITComment=$(git log -1 --pretty=%B)
-echo "GIT SHA = ${GITREVSHA} ${GITComment}"
-echo 
+
 if [ "${WORKSPACE}" ]; then
 	GITREVSHA=$(git --git-dir="${WORKSPACE}/.git" --work-tree="${WORKSPACE}" rev-parse --short HEAD)
 	GITComment=$(git --git-dir="${WORKSPACE}/.git" --work-tree="${WORKSPACE}" log -1 --pretty=%B)
-	echo "GIT SHA = ${GITREVSHA} ${GITComment}"
-	echo "cd WORKSPACE"
 	cd ${WORKSPACE}
 fi
 
@@ -32,4 +29,5 @@ pod install --no-repo-update
 # fir封装打包
 # fir build_ipa <workspace的目录> -w -S <scheme name> -C <要打包的项目配置> -o <输出目录> -p -T <FIR_TOKEN(-p -T为上传至fir.im)> -c <YOUR_CHANGELOG>
 # 更多参数介绍fir build_ipa -h
-#fir build_ipa ./ -w -S iOSTestJenkins -C AdHoc -o ./build -p -T 9857ecbff1e5bf9cd0686d01e90c3a97
+out="${GITREVSHA}\n${GITComment}"
+fir build_ipa ./ -w -S iOSTestJenkins -C AdHoc -o ./build -p -T 9857ecbff1e5bf9cd0686d01e90c3a97 -c ${out}
