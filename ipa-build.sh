@@ -3,11 +3,13 @@
 # Get the current git commmit hash (first 7 characters of the SHA)
 # GITREVSHA=$(git --git-dir="${PROJECT_DIR}/.git" --work-tree="${PROJECT_DIR}" rev-parse --short HEAD)
 GITREVSHA=$(git rev-parse --short HEAD)
-echo "GIT SHA = ${GITREVSHA}"
+GITComment=$(git log -1 --pretty=%B)
+echo "GIT SHA = ${GITREVSHA} ${GITComment}"
 echo 
 if [ "${WORKSPACE}" ]; then
 	GITREVSHA=$(git --git-dir="${WORKSPACE}/.git" --work-tree="${WORKSPACE}" rev-parse --short HEAD)
-	echo "GIT SHA = ${GITREVSHA}"
+	GITComment=$(git --git-dir="${WORKSPACE}/.git" --work-tree="${WORKSPACE}" log -1 --pretty=%B)
+	echo "GIT SHA = ${GITREVSHA} ${GITComment}"
 	echo "cd WORKSPACE"
 	cd ${WORKSPACE}
 fi
