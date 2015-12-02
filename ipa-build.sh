@@ -9,6 +9,8 @@ if [ "${WORKSPACE}" ]; then
 	GITREVSHA=$(git --git-dir="${WORKSPACE}/.git" --work-tree="${WORKSPACE}" rev-parse --short HEAD)
 	GITComment=$(git --git-dir="${WORKSPACE}/.git" --work-tree="${WORKSPACE}" log -1 --pretty=%B)
 	cd ${WORKSPACE}
+else
+	WORKSPACE="./"
 fi
 
 #创建build文件夹
@@ -29,12 +31,14 @@ pod install --no-repo-update
 # fir封装打包
 # fir build_ipa <workspace的目录> -w -S <scheme name> -C <要打包的项目配置> -o <输出目录> -p -T <FIR_TOKEN(-p -T为上传至fir.im)> -c <YOUR_CHANGELOG>
 # 更多参数介绍fir build_ipa -h
-out="${GITREVSHA}\n${GITComment}"
+out="${GITREVSHA} ${GITComment}"
+echo "编译并上传fir"
 fir build_ipa ./ -w -S iOSTestJenkins -C AdHoc -o ./build -n iOSTestJenkins -p -T 9857ecbff1e5bf9cd0686d01e90c3a97 -c "${out}"
 
 # 上传蒲公英
+echo "上传蒲公英"
 uKey="f91076c2494b5b01a6311c7cc2b9dd2e"
 apiKey="f4efaf8945b1d5675dc588c61ad5b674"
 filePath="${WORKSPACE}/build/iOSTestJenkins.ipa"
 # curl -F "file=@${filePath}" -F "uKey=${uKey}" -F "_api_key=${apiKey}" -F "publishRange=2" -F "updateDescription=${out}" http://www.pgyer.com/apiv1/app/upload
-curl -F "file=@${filePath}" -F "uKey=$f91076c2494b5b01a6311c7cc2b9dd2e" -F "_api_key=f4efaf8945b1d5675dc588c61ad5b674" http://www.pgyer.com/apiv1/app/upload
+curl -F "file=@${filePath}" -F "uKey=${uKey}" -F "_api_key=${apiKey}" -F "publishRange=2" -F "updateDescription=${out} http://www.pgyer.com/apiv1/app/upload
